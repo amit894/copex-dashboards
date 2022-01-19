@@ -1,7 +1,6 @@
-from google.cloud import bigquery
-from google.oauth2 import service_account
+from bigquery_client import BigQueryClient
 
-client = bigquery.Client()
 
-for project in client.list_projects():
-        print(project.project_id)
+B1 = BigQueryClient()
+B1.list_datasets()
+B1.list_projects()
