@@ -37,3 +37,25 @@ class BigQueryClient():
         print(
             "Created table {}.{}.{}".format(table.project, table.dataset_id, table.table_id)
         )
+
+    def client_query(self,query):
+
+        client = bigquery.Client()
+        query_job = client.query(query)
+
+        print("The query data:")
+        for row in query_job:
+            print(row)
+
+
+    def create_table_from_query(self,rows_to_insert,dataset_name="DATASET", table_name="TABLE"):
+        client = bigquery.Client()
+
+        dataset_ref = client.dataset(dataset_name)
+        table_ref = dataset_ref.table(table_name)
+        table = client.get_table(table_ref)
+
+
+        errors = client.insert_rows(table, rows_to_insert)
+        print(errors)
+        #assert errors == []
