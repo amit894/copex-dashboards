@@ -1,0 +1,6 @@
+{
+  "grant_type": "client_credentials",
+  "client_id": "254a124e-9cb5-49b2-919d-faf8c141ac0a",
+  "client_secret": "test",
+  "resource": "https://management.azure.com"
+}

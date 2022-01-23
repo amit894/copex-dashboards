@@ -17,7 +17,7 @@ class RestClient():
     def post_api(request_url,request_data,headers):
         response=requests.post(request_url,data=request_data,headers=headers)
         if response.status_code != 200:
-            print(response.status_code)
+            print(response.content)
             return "Error in Post call"
         else:
             return response.content
