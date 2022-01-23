@@ -4,16 +4,20 @@ class RestClient():
     def __init__(self):
         pass
 
-    def get_api(self,request_url,pms):
+    @staticmethod
+    def get_api(request_url,pms):
         response=requests.get(request_url,params=pms)
         if response.status_code != 200:
+            print(response.status_code)
             return "Error in Get call"
         else:
             return response.content
 
-    def post_api(self,request_url,request_data):
-        response=requests.post(request_url,data=request_data)
+    @staticmethod
+    def post_api(request_url,request_data,headers):
+        response=requests.post(request_url,data=request_data,headers=headers)
         if response.status_code != 200:
-            return "Error in Get call"
+            print(response.status_code)
+            return "Error in Post call"
         else:
             return response.content
