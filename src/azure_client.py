@@ -1,6 +1,7 @@
 from azure.mgmt.resource import ResourceManagementClient
 from azure.identity import AzureCliCredential
 from azure.mgmt.costmanagement import CostManagementClient
+from rest_client import RestClient
 
 class AzureClient():
     def __init__(self,subscription_id):
