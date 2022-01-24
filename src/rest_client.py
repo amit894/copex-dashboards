@@ -11,7 +11,7 @@ class RestClient():
             print(response.status_code)
             return "Error in Get call"
         else:
-            return response.content
+            return response.json()
 
     @staticmethod
     def post_api(request_url,request_data,headers):
@@ -20,4 +20,13 @@ class RestClient():
             print(response.content)
             return "Error in Post call"
         else:
-            return response.content
+            return response.json()
+
+    @staticmethod
+    def post_api_without_headers(request_url,request_data):
+        response=requests.post(request_url,data=request_data)
+        if response.status_code != 200:
+            print(response.content)
+            return "Error in Post call"
+        else:
+            return response.json()
