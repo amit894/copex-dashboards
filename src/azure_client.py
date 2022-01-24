@@ -25,9 +25,26 @@ class AzureClient():
         )
 
     def get_resource_group_cost(self,resource_group):
-        headers = {"Authorization": self.access_token}
+        headers = {"Authorization": self.access_token,"Content-Type":"application/json"}
+        payload = json.dumps({
+          "type": "Usage",
+          "timeframe": "TheLastMonth",
+          "dataset": {
+            "granularity": "Daily",
+            "aggregation": {
+              "totalCost": {
+                "name": "PreTaxCost",
+                "function": "Sum"
+              }
+            },
+            "grouping": [
+              {
+                "type": "Dimension",
+                "name": "ResourceGroup"
+              }
+            ]
+          }
+        })
         request_url="https://management.azure.com/subscriptions/8b207ff4-64b0-4488-9353-aebe1d29be77/resourceGroups/NetworkWatcherRG/providers/Microsoft.CostManagement/query?api-version=2021-10-01"
         f1 = open("../resources/cost/azure/sample.json")
-        request_data = json.load(f1)
-        request_data["scope"]="/subscriptions/8b207ff4-64b0-4488-9353-aebe1d29be77/resourceGroups/NetworkWatcherRG"
-        print(RestClient.post_api(request_url,request_data,headers))
+        print(RestClient.post_api(request_url,payload,headers))
