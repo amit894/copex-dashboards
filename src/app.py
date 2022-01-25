@@ -1,13 +1,14 @@
 from bigquery_client import BigQueryClient
 from azure_client import AzureClient
 from datetime import date
+from data_aggregator import DataAggregator
 
 
 
 A1= AzureClient("8b207ff4-64b0-4488-9353-aebe1d29be77")
 A1.authenticate()
-daily_cost=A1.get_resource_group_cost("NetworkWatcherRG")
-
+daily_cost_array=A1.get_resource_group_cost("NetworkWatcherRG")
+daily_cost=DataAggregator.sum(daily_cost_array)
 
 B1 = BigQueryClient()
 B1.create_dataset("opex_dashboard","US")
