@@ -4,12 +4,14 @@ import json
 class AzureClient():
     def __init__(self,subscription_id):
         self.subscription_id=subscription_id
+        self.authenticate_url="https://login.microsoftonline.com/8f12c261-6dbf-47c3-918f-1d15198a3b3b/oauth2/token"
+        self.creds_file="../resources/cost/azure/identity_grant.json"
+        self.management_url="https://management.azure.com/subscriptions/8b207ff4-64b0-4488-9353-aebe1d29be77/"
 
     def authenticate(self):
-        request_url="https://login.microsoftonline.com/8f12c261-6dbf-47c3-918f-1d15198a3b3b/oauth2/token"
-        f1 = open("../resources/cost/azure/identity_grant.json")
+        f1 = open(self.creds_file)
         request_data = json.load(f1)
-        response=RestClient.post_api_without_headers(request_url,request_data)
+        response=RestClient.post_api_without_headers(self.authenticate_url,request_data)
         self.access_token="Bearer "+ response["access_token"]
 
     def set_resource_client(self):
@@ -45,6 +47,6 @@ class AzureClient():
             ]
           }
         })
-        request_url="https://management.azure.com/subscriptions/8b207ff4-64b0-4488-9353-aebe1d29be77/resourceGroups/NetworkWatcherRG/providers/Microsoft.CostManagement/query?api-version=2021-10-01"
-        f1 = open("../resources/cost/azure/sample.json")
-        print(RestClient.post_api(request_url,payload,headers))
+        request_url=self.management_url+"/resourceGroups/"+resource_group+"/providers/Microsoft.CostManagement/query?api-version=2021-10-01"
+        response=RestClient.post_api(request_url,payload,headers)
+        return response["properties"]["rows"]
