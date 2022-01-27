@@ -3,45 +3,32 @@ from google.oauth2 import service_account
 
 
 class BigQueryClient():
-    def __init__(self):
-        pass
+    def __init__(self,project=None):
+        self.client = bigquery.Client(project=project)
 
     def list_datasets(self,project=None):
-        client = bigquery.Client(project=project)
-        for dataset in client.list_datasets():
+        for dataset in self.client.list_datasets():
             print(dataset.dataset_id)
 
     def list_projects(self):
         client = bigquery.Client()
-        for project in client.list_projects():
+        for project in self.client.list_projects():
                 print(project.project_id)
 
     def create_dataset(self,dataset_id, location, project=None):
-        client = bigquery.Client(project=project)
-        dataset = client.dataset(dataset_id)
+        dataset = self.client.dataset(dataset_id)
         dataset.location = location
-        dataset = client.create_dataset(bigquery.Dataset(dataset))
+        dataset = self.client.create_dataset(bigquery.Dataset(dataset))
 
-    def create_table(self,table_id,project=None):
-
-        schema = [
-            bigquery.SchemaField("last_updated_time", "TIMESTAMP", mode="REQUIRED"),
-            bigquery.SchemaField("si_number", "INTEGER", mode="REQUIRED"),
-            bigquery.SchemaField("domain_name", "STRING", mode="REQUIRED"),
-            bigquery.SchemaField("cost_value", "NUMERIC", mode="REQUIRED"),
-            bigquery.SchemaField("cost_date", "DATE", mode="REQUIRED"),
-        ]
-        client = bigquery.Client(project=project)
+    def create_table(self,table_id,schema,project=None):
         table = bigquery.Table(table_id, schema=schema)
-        table = client.create_table(table)
+        table = self.client.create_table(table)
         print(
             "Created table {}.{}.{}".format(table.project, table.dataset_id, table.table_id)
         )
 
     def client_query(self,query):
-
-        client = bigquery.Client()
-        query_job = client.query(query)
+        query_job = self.client.query(query)
 
         print("The query data:")
         for row in query_job:
@@ -49,13 +36,12 @@ class BigQueryClient():
 
 
     def create_table_from_query(self,rows_to_insert,dataset_name="DATASET", table_name="TABLE"):
-        client = bigquery.Client()
 
-        dataset_ref = client.dataset(dataset_name)
+        dataset_ref = self.client.dataset(dataset_name)
         table_ref = dataset_ref.table(table_name)
-        table = client.get_table(table_ref)
+        table = self.client.get_table(table_ref)
 
 
-        errors = client.insert_rows(table, rows_to_insert)
+        errors = self.client.insert_rows(table, rows_to_insert)
         print(errors)
         #assert errors == []
