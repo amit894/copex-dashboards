@@ -5,7 +5,7 @@ class AzureClient():
     def __init__(self,subscription_id):
         self.subscription_id=subscription_id
         self.authenticate_url="https://login.microsoftonline.com/8f12c261-6dbf-47c3-918f-1d15198a3b3b/oauth2/token"
-        self.creds_file="../resources/cost/azure/identity_grant.json"
+        self.creds_file="../resources/cost/azure/creds.json"
         self.management_url="https://management.azure.com/subscriptions/8b207ff4-64b0-4488-9353-aebe1d29be77/"
 
     def authenticate(self):
